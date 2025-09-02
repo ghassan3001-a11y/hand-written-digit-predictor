@@ -1,10 +1,11 @@
 import os
 import numpy as np
+import joblib
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-def load_and_preprocess_data(data_path="data/mnist_784.npz"):
+def load_and_preprocess_data(data_path="data/mnist_784.npz", scaler_path="scaler.joblib"):
     """
     Loads the MNIST dataset from a local file or downloads it if not present.
     It then scales and splits the data.
@@ -35,6 +36,11 @@ def load_and_preprocess_data(data_path="data/mnist_784.npz"):
     # Scale the data
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
+
+    # Save the scaler for later use
+    if scaler_path:
+        joblib.dump(scaler, scaler_path)
+        print(f"Scaler saved to {scaler_path}")
 
     # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
