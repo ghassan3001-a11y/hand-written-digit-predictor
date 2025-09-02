@@ -1,3 +1,4 @@
+import argparse
 import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
@@ -10,21 +11,25 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 's
 
 from data_preprocessing import load_and_preprocess_data
 
-def train_model(X_train, y_train):
+def train_model(X_train, y_train, hidden_layer_sizes, max_iter, alpha, learning_rate_init):
     """
     Trains a Multi-layer Perceptron (MLP) classifier on the training data.
     
     Args:
         X_train: Training feature data.
         y_train: Training target data.
+        hidden_layer_sizes (tuple): The number of neurons in the hidden layers.
+        max_iter (int): The maximum number of iterations.
+        alpha (float): L2 penalty (regularization term) parameter.
+        learning_rate_init (float): The initial learning rate.
         
     Returns:
         The trained MLP classifier.
     """
     # Create and train the model
-    mlp_clf = MLPClassifier(hidden_layer_sizes=(100,), max_iter=10, alpha=1e-4,
+    mlp_clf = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, alpha=alpha,
                         solver='sgd', verbose=10, random_state=1,
-                        learning_rate_init=.1)
+                        learning_rate_init=learning_rate_init)
     mlp_clf.fit(X_train, y_train)
     return mlp_clf
 
@@ -58,11 +63,18 @@ def save_model(model, filename):
     joblib.dump(model, filename)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Train an MLP classifier on the MNIST dataset.")
+    parser.add_argument('--hidden_layer_sizes', type=int, nargs='+', default=[100], help='The number of neurons in the hidden layers.')
+    parser.add_argument('--max_iter', type=int, default=10, help='The maximum number of iterations.')
+    parser.add_argument('--alpha', type=float, default=1e-4, help='L2 penalty (regularization term) parameter.')
+    parser.add_argument('--learning_rate_init', type=float, default=.1, help='The initial learning rate.')
+    args = parser.parse_args()
+
     # Load and preprocess the data
     X_train, X_test, y_train, y_test = load_and_preprocess_data()
     
     # Train the model
-    model = train_model(X_train, y_train)
+    model = train_model(X_train, y_train, tuple(args.hidden_layer_sizes), args.max_iter, args.alpha, args.learning_rate_init)
     print("Model trained successfully.")
     
     # Evaluate the model

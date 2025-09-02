@@ -30,13 +30,22 @@ To get started with this project, follow these steps:
 
 ### Training the Model
 
-To train the model, run the `main.py` script:
+You can train the model with custom hyperparameters using command-line arguments.
+
+**Example:**
 
 ```bash
-uv run python src/main.py
+uv run python src/main.py --hidden_layer_sizes 50 50 --max_iter 20 --learning_rate_init 0.01
 ```
 
 This will train the MLP classifier on the MNIST dataset and save the trained model to `mnist_mlp_model.joblib`.
+
+**Arguments:**
+
+-   `--hidden_layer_sizes`: The number of neurons in the hidden layers (e.g., `50 50` for two layers with 50 neurons each). Default is `100`.
+-   `--max_iter`: The maximum number of iterations. Default is `10`.
+-   `--alpha`: L2 penalty (regularization term) parameter. Default is `1e-4`.
+-   `--learning_rate_init`: The initial learning rate. Default is `0.1`.
 
 ### Testing the Model
 
