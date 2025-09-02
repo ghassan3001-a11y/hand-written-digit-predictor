@@ -28,17 +28,21 @@ To get started with this project, follow these steps:
 
 ## Usage
 
+This project uses a command-line interface with three main commands: `train`, `test`, and `app`.
+
 ### Training the Model
 
-You can train the model with custom hyperparameters using command-line arguments.
+To train the model, use the `train` command. You can also provide custom hyperparameters.
 
-**Example:**
-
+**Default training:**
 ```bash
-uv run python src/main.py --hidden_layer_sizes 50 50 --max_iter 20 --learning_rate_init 0.01
+uv run python main.py train
 ```
 
-This will train the MLP classifier on the MNIST dataset and save the trained model to `mnist_mlp_model.joblib`.
+**Custom training:**
+```bash
+uv run python main.py train --hidden_layer_sizes 50 50 --max_iter 20 --learning_rate_init 0.01
+```
 
 **Arguments:**
 
@@ -49,13 +53,22 @@ This will train the MLP classifier on the MNIST dataset and save the trained mod
 
 ### Testing the Model
 
-To test the model with a random sample from the test set, run the `test_model.py` script:
+To test the model with a random sample from the test set, use the `test` command:
 
 ```bash
-uv run python src/test_model.py
+uv run python main.py test
 ```
 
 This will load the saved model and display a plot with the digit and the model's prediction.
+
+### Drawing Application
+
+To run the interactive drawing application, use the `app` command:
+
+```bash
+uv run python main.py app
+```
+This will open a window where you can draw a digit with your mouse. When you close the window, the model will predict the digit you drew.
 
 ## Project Structure
 
