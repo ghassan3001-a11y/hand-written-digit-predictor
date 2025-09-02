@@ -28,8 +28,8 @@ def train_model(X_train, y_train, hidden_layer_sizes, max_iter, alpha, learning_
     """
     # Create and train the model
     mlp_clf = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, alpha=alpha,
-                        solver='sgd', verbose=10, random_state=1,
-                        learning_rate_init=learning_rate_init)
+                        solver='adam', verbose=10, random_state=1,
+                        learning_rate_init=learning_rate_init, early_stopping=True, n_iter_no_change=5)
     mlp_clf.fit(X_train, y_train)
     return mlp_clf
 
@@ -64,10 +64,10 @@ def save_model(model, filename):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train an MLP classifier on the MNIST dataset.")
-    parser.add_argument('--hidden_layer_sizes', type=int, nargs='+', default=[100], help='The number of neurons in the hidden layers.')
-    parser.add_argument('--max_iter', type=int, default=10, help='The maximum number of iterations.')
+    parser.add_argument('--hidden_layer_sizes', type=int, nargs='+', default=[256, 128], help='The number of neurons in the hidden layers.')
+    parser.add_argument('--max_iter', type=int, default=50, help='The maximum number of iterations.')
     parser.add_argument('--alpha', type=float, default=1e-4, help='L2 penalty (regularization term) parameter.')
-    parser.add_argument('--learning_rate_init', type=float, default=.1, help='The initial learning rate.')
+    parser.add_argument('--learning_rate_init', type=float, default=0.001, help='The initial learning rate.')
     args = parser.parse_args()
 
     # Load and preprocess the data

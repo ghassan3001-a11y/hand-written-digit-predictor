@@ -29,6 +29,9 @@ def load_and_preprocess_data(data_path="data/mnist_784.npz"):
         np.savez_compressed(data_path, X=X, y=y)
         print(f"Saved MNIST data to {data_path}")
 
+    # Convert labels to integers
+    y = y.astype(np.uint8)
+
     # Scale the data
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
