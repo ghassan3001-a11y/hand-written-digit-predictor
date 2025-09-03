@@ -35,7 +35,7 @@ def display_sample_prediction(model, X, y):
     # This requires the original scaler, which we don't have here.
     # We will reshape and display the scaled data. It won't be a perfect image.
     sample_digit_image = sample_digit.reshape(28, 28)
-    
+    print(sample_digit)
     # Get the model's prediction
     prediction = model.predict([sample_digit])
     

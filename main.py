@@ -5,7 +5,7 @@ import pygame
 import numpy as np
 from PIL import Image, ImageOps
 import joblib
-
+import matplotlib.pyplot as plt
 # Add the src directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
 
@@ -14,15 +14,15 @@ from data_preprocessing import load_and_preprocess_data
 from test_model import load_model, display_sample_prediction
 
 def draw_digit():
-    PIXEL_SIZE = 4   # Size of each displayed pixel
-    GRID_SIZE = 28
+    PIXEL_SIZE = 5   # Size of each displayed pixel
+    GRID_SIZE = 64
     BRUSH_SIZE = 2    # Thickness of the brush in grid cells
     WINDOW_SIZE = PIXEL_SIZE * GRID_SIZE
 
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
     pygame.display.set_caption("Draw a digit (MNIST style)")
-    canvas = np.zeros((GRID_SIZE, GRID_SIZE), dtype=np.uint8)
+    canvas = np.full((GRID_SIZE, GRID_SIZE), 255, dtype=np.uint8)
 
     running = True
     drawing = False
@@ -43,12 +43,12 @@ def draw_digit():
                     for dy in range(-BRUSH_SIZE//2, BRUSH_SIZE//2 + 1):
                         nx, ny = grid_x + dx, grid_y + dy
                         if 0 <= nx < GRID_SIZE and 0 <= ny < GRID_SIZE:
-                            canvas[ny, nx] = 255
+                            canvas[ny, nx] = 0
 
         # Draw the canvas on the window
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
-                color = (255 - canvas[i, j],) * 3  # White for 0, black for 255
+                color = (canvas[i, j],) * 3  # White for 0, black for 255
                 pygame.draw.rect(screen, color,
                                  (j * PIXEL_SIZE, i * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
         pygame.display.update()
@@ -58,20 +58,18 @@ def draw_digit():
     img.save("digit.png")
     pygame.quit()
 
-def preprocess_drawn_digit(scaler=None, image_path="digit.png"):
+def preprocess_drawn_digit(image_path="digit.png"):
     img = Image.open(image_path).convert('L')
-
     # Invert and fit to 28x28 MNIST size
     img = ImageOps.invert(img)
     img = ImageOps.fit(img, (28, 28), centering=(0.5, 0.5))
-
     # Convert to numpy array, flatten, normalize
-    img_array = np.array(img).astype(np.float32) / 255.0
+    img_array = np.array(img).astype(np.float32)
     img_array = img_array.flatten().reshape(1, -1)
-
+    
     # Apply scaler if provided
-    if scaler is not None:
-        img_array = scaler.transform(img_array)
+    '''if scaler is not None:
+        img_array = scaler.transform(img_array)'''
     return img_array
 
 def main():
@@ -94,7 +92,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'train':
-        X_train, X_test, y_train, y_test = load_and_preprocess_data(scaler_path="scaler.joblib")
+        X_train, X_test, y_train, y_test = load_and_preprocess_data()
         model = train_model(X_train, y_train, tuple(args.hidden_layer_sizes),
                             args.max_iter, args.alpha, args.learning_rate_init)
         print("Model trained successfully.")
@@ -114,16 +112,10 @@ def main():
         draw_digit()
         model = load_model("mnist_mlp_model.joblib")
 
-        # Load scaler
-        try:
-            scaler = joblib.load("scaler.joblib")
-            print("Scaler loaded successfully.")
-        except FileNotFoundError:
-            print("Error: scaler.joblib not found. Train the model first.")
-            return
-
-        digit = preprocess_drawn_digit(scaler)
+        digit = preprocess_drawn_digit()
+        print(digit)
         prediction = model.predict(digit)
+        print(prediction)
         print(f"The model predicts you drew a: {prediction[0]}")
 
 if __name__ == "__main__":

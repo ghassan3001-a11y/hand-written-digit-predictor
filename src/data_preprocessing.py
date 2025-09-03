@@ -1,11 +1,9 @@
 import os
-import numpy as np
-import joblib
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+import numpy as np
 
-def load_and_preprocess_data(data_path="data/mnist_784.npz", scaler_path="scaler.joblib"):
+def load_and_preprocess_data(data_path="data/mnist_784.npz"):
     """
     Loads the MNIST dataset from a local file or downloads it if not present.
     It then scales and splits the data.
@@ -32,21 +30,18 @@ def load_and_preprocess_data(data_path="data/mnist_784.npz", scaler_path="scaler
 
     # Convert labels to integers
     y = y.astype(np.uint8)
-
-    # Scale the data
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
-    # Save the scaler for later use
-    if scaler_path:
-        joblib.dump(scaler, scaler_path)
-        print(f"Scaler saved to {scaler_path}")
-
     # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
-        X_scaled, y, test_size=0.2, random_state=42
+        X, y, test_size=0.2, random_state=42
     )
-
+    # Shuffle training data
+    perm = np.random.permutation(X_train.shape[0])
+    X_train = X_train[perm]
+    y_train = y_train[perm]
+    # Shuffle test data
+    perm_test = np.random.permutation(X_test.shape[0])
+    X_test = X_test[perm_test]
+    y_test = y_test[perm_test]
     return X_train, X_test, y_train, y_test
 
 if __name__ == "__main__":
