@@ -113,7 +113,6 @@ def main():
         model = load_model("mnist_mlp_model.joblib")
 
         digit = preprocess_drawn_digit()
-        print(digit)
         prediction = model.predict(digit)
         print(prediction)
         print(f"The model predicts you drew a: {prediction[0]}")
