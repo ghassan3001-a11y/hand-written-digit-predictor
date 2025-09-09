@@ -36,12 +36,12 @@ To train the model, use the `train` command. You can also provide custom hyperpa
 
 **Default training:**
 ```bash
-uv run python main.py train
+uv run main.py train
 ```
 
 **Custom training:**
 ```bash
-uv run python main.py train --hidden_layer_sizes 50 50 --max_iter 20 --learning_rate_init 0.01
+uv run main.py train --hidden_layer_sizes 50 50 --max_iter 20 --learning_rate_init 0.01
 ```
 
 **Arguments:**
@@ -56,7 +56,7 @@ uv run python main.py train --hidden_layer_sizes 50 50 --max_iter 20 --learning_
 To test the model with a random sample from the test set, use the `test` command:
 
 ```bash
-uv run python main.py test
+uv run main.py test
 ```
 
 This will load the saved model and display a plot with the digit and the model's prediction.
@@ -66,7 +66,7 @@ This will load the saved model and display a plot with the digit and the model's
 To run the interactive drawing application, use the `app` command:
 
 ```bash
-uv run python main.py app
+uv run main.py app
 ```
 This will open a window where you can draw a digit with your mouse. When you close the window, the model will predict the digit you drew.
 
