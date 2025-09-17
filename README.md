@@ -1,4 +1,4 @@
-# MNIST Digit Recognition Project
+# Hand Written Digit Predictor
 
 This project is an implementation of a neural network to recognize handwritten digits from the MNIST dataset. The model is built using scikit-learn's Multi-layer Perceptron (MLP) classifier.
 
