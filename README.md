@@ -6,7 +6,7 @@ This project is an implementation of a neural network to recognize handwritten d
 
 | AC.NO | Name | Role | Contributions |
 |----|------|------|---------------|
-| 1 | Ghassan | Lead Developer | Project setup, model development, and training |
+| 202270007 | Ghassan | Lead Developer | Project setup, model development, and training |
 
 ## Installation and Setup
 
